@@ -1,23 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import './App.scss';
+import { subscribe } from './api';
 
-function App() {
+const App = () => {
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    subscribe((e) => setChartData(e));
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="generalDataWrapper">
+        <div className="generalData">
+          <span>{`ID: ${chartData[0]?.id}`}</span>
+          <span>{`Temp: ${chartData[0]?.temperature} C`}</span>
+        </div>
+        <div className="generalData">
+          <span>{`ID: ${chartData[1]?.id}`}</span>
+          <span>{`Temp: ${chartData[1]?.temperature} C`}</span>
+        </div>
+      </div>
+      <div className="chart">
+        <div className="column">
+          <div 
+            className="filled"
+            style={{
+              height: `${chartData[0]?.data}px`,
+              display: chartData[0]?.data > 100 ? 'none' : 'block',
+            }}
+          />
+          <span className="columnId">{chartData[0]?.id}</span>
+          <span>{chartData[0]?.data}</span>
+        </div>
+        <div className="column">
+          <div 
+            className="filled"
+            style={{
+              height: `${chartData[1]?.data}px`,
+              display: chartData[1]?.data > 100 ? 'none' : 'block',
+            }}
+          />
+          <span className="columnId">{chartData[1]?.id}</span>
+          <span>{chartData[1]?.data}</span>
+        </div>
+      </div>
     </div>
   );
 }
